@@ -18,5 +18,7 @@ jobs:
     steps:
       - name: Use variables
         run: |
-          echo "environment variable $AWS_REGION"
+          echo "environment variable ${{vars.AWS_REGION}}"
           echo "repository variable $AWS_DEFAULT_REGION"
+        env: 
+         AWS_DEFAULT_REGION: ${{vars.AWS_DEFAULT_REGION}}
