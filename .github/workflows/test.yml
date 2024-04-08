@@ -1,5 +1,5 @@
 name: learn-github-actions
-run-name: GitHub Actions Starter
+run-name: ${{ github.actor }} is learning GitHub Actions
 on: [push]
 jobs:
   check-bats-version:
@@ -11,3 +11,12 @@ jobs:
           node-version: '20'
       - run: npm install -g bats
       - run: bats -v
+
+  deployment:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Use variables
+        run: |
+          echo "environment variable $vars.AWS_REGION";
+          echo "repository variable $vars.AWS_DEFAULT_REGION"
