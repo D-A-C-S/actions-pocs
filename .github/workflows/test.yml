@@ -2,23 +2,18 @@ name: learn-github-actions
 run-name: ${{ github.actor }} is learning GitHub Actions
 on: [push]
 jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
-
   deployment:
     runs-on: ubuntu-latest
     environment: dev
+    permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
     steps:
-      - name: Use variables
-        run: |
-          echo "environment variable ${{vars.AWS_REGION}}"
-          echo "repository variable $AWS_DEFAULT_REGION"
-        env: 
-         AWS_DEFAULT_REGION: ${{vars.AWS_DEFAULT_REGION}}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: us-west-2
+        role-to-assume: "{{ secrets.AWS_DEPLOY_ROLE_ARN }}"
+        role-session-name: gitHubActions
+    - name : Test Credentials
+    - run: aws s3 ls
